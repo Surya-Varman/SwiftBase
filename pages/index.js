@@ -26,6 +26,12 @@ export default function Home() {
        <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
        <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
       </div>
+      <div className='d-flex flex-row cards'>
+       <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
+       <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
+       <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
+       <div> <Card description ="Good watch the best there is" price="99$" reviews="5" name= "Apple Watch Series 8"/></div>
+      </div>
       <Footer/>
     </>
   )

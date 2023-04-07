@@ -17,7 +17,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import {useUser} from '@auth0/nextjs-auth0/client'
+import {initAuth0} from '@auth0/nextjs-auth0'
+import {createAuth0Client} from '@auth0/auth0-spa-js';
 import Link from 'next/link'
+import {useRouter} from 'next/router'
+import axios from '../node_modules/axios';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -65,12 +69,13 @@ export default function PrimarySearchAppBar() {
   const [isBuyer,setIsBuyer] = React.useState(true);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const router = useRouter();
   React.useEffect(()=>{ 
-    console.log(localStorage.getItem('isBuyer'))
     if(localStorage.getItem('isBuyer') !== null){
         setIsBuyer(JSON.parse(localStorage.getItem('isBuyer')))
-        console.log(isBuyer)
     }
+
+
   },[isBuyer])
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -100,6 +105,25 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   }
+  const  displayUserDetails = async () => {
+    const auth0Client = await createAuth0Client({
+      domain: process.env.AUTH0_DOMAIN,
+      client_id: process.env.AUTH0_CLIENT_ID,
+      redirect_uri: process.env.AUTH0_REDIRECT_URI,
+    });
+    // const auth0user = await auth0Client.getUser();
+    console.log(user);
+    if(user){
+      let userTemp={};
+      if(isBuyer){
+        userTemp = {...user,isBuyer:true,isSeller:false}
+      }
+      else{
+        userTemp = {...user,isBuyer:false,isSeller:true}
+      }
+      axios.post("/api/users/uploadUser",userTemp).then(console.log("successfully added user")).catch(err=>console.log(err))
+    }
+  }
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -117,7 +141,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-    {user ? <div><MenuItem onClick={handleMenuClose}><Link href="/api/auth/logout">Log out</Link></MenuItem> {isBuyer? <MenuItem onClick={handleMenuClose}>Buyer Details</MenuItem>:<MenuItem onClick={handleMenuClose}>Seller Details</MenuItem>}</div>
+    {user ? <div><MenuItem onClick={handleMenuClose}><Link href="/api/auth/logout">Log out</Link></MenuItem> {isBuyer? <MenuItem onClick={handleMenuClose}>Buyer Details</MenuItem>:<MenuItem onClick={handleMenuClose}><Link href="/seller/productUploadForm">Upload a product</Link></MenuItem>}<MenuItem onClick={displayUserDetails}> User Details</MenuItem></div>
     :
     <div>
       <Link href="/api/auth/login"><MenuItem onClick={handleBuyer}>Buyer Login</MenuItem></Link>
@@ -191,7 +215,6 @@ export default function PrimarySearchAppBar() {
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
             Swift Buy
-            {console.log(user)}
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -213,9 +236,12 @@ export default function PrimarySearchAppBar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={() => {
+                router.push("/myCart");
+              }}
             >
               <Badge badgeContent={17} color="error">
-                <ShoppingCartIcon />
+               <ShoppingCartIcon />
               </Badge>
             </IconButton>
             <IconButton
