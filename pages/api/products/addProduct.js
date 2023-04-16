@@ -13,11 +13,19 @@ export default async function handler(req, res) {
         price: req.body.price,
         image: req.body.image,
         category: req.body.category,
+        quantity: req.body.Quantity,
         reviews: 0,
         itemsSold: 0,
         itemsReturned: 0,
     });
-    res.setHeader('Content-Type', 'text/plain');
-    temp.save().then(() => { res.send("Saved success fully") });
-    res.send("Failed to save")
+    // res.setHeader('Content-Type', 'text/plain');
+    let error = false;
+    // temp.save();
+    temp.save().then(() => { error = false; }).catch((err) => { error = true; });
+    // res.send("Error",500);
+    if (error) {
+        res.send("Error", 500);
+    }
+    res.send("Success", 200);
+    
 }

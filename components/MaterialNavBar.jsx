@@ -22,6 +22,7 @@ import {createAuth0Client} from '@auth0/auth0-spa-js';
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import axios from '../node_modules/axios';
+import { useEffect } from 'react';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -70,12 +71,17 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const router = useRouter();
-  React.useEffect(()=>{ 
+  useEffect(()=>{ 
     if(localStorage.getItem('isBuyer') !== null){
         setIsBuyer(JSON.parse(localStorage.getItem('isBuyer')))
     }
-
-
+    // while(isLoading){
+    //   console.log("loading");
+    // }
+    if(user){
+      console.log("use effect is working");
+      axios.post('/api/users/uploadUser',{user:user});
+    }
   },[isBuyer])
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -88,8 +94,18 @@ export default function PrimarySearchAppBar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-  };
 
+  };
+  const handleAccount = () =>{
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    router.push('/myAccount')
+  }
+  const handleSellerDashboard = () =>{
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    router.push('/seller/Dashboard')
+  }
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -106,11 +122,6 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   }
   const  displayUserDetails = async () => {
-    const auth0Client = await createAuth0Client({
-      domain: process.env.AUTH0_DOMAIN,
-      client_id: process.env.AUTH0_CLIENT_ID,
-      redirect_uri: process.env.AUTH0_REDIRECT_URI,
-    });
     // const auth0user = await auth0Client.getUser();
     console.log(user);
     if(user){
@@ -141,14 +152,14 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-    {user ? <div><MenuItem onClick={handleMenuClose}><Link href="/api/auth/logout">Log out</Link></MenuItem> {isBuyer? <MenuItem onClick={handleMenuClose}>Buyer Details</MenuItem>:<MenuItem onClick={handleMenuClose}><Link href="/seller/productUploadForm">Upload a product</Link></MenuItem>}<MenuItem onClick={displayUserDetails}> User Details</MenuItem></div>
+    {user ? <div><MenuItem onClick={handleMenuClose}><Link href="/api/auth/logout">Log out</Link></MenuItem> {isBuyer? <MenuItem onClick={handleMenuClose}>Buyer Details</MenuItem>:<div><MenuItem onClick={handleMenuClose}><Link href="/seller/productUploadForm">Upload a product</Link></MenuItem><MenuItem onClick={handleSellerDashboard}>Dashboard</MenuItem> </div>}<MenuItem onClick={displayUserDetails}> User Details</MenuItem></div>
     :
     <div>
       <Link href="/api/auth/login"><MenuItem onClick={handleBuyer}>Buyer Login</MenuItem></Link>
       <Link href="/api/auth/login"><MenuItem onClick={handleSeller}>Seller Login</MenuItem></Link>
     </div>
     }
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleAccount}>My account</MenuItem>
     </Menu>
   );
 
@@ -213,8 +224,9 @@ export default function PrimarySearchAppBar() {
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
+            
           >
-            Swift Buy
+            <span>Swift Buy</span>
           </Typography>
           <Search>
             <SearchIconWrapper>

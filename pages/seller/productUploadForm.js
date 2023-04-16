@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-
+import  {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import {
   MDBBtn,
   MDBContainer,
@@ -18,19 +19,19 @@ function ProductUploadForm() {
   const [name, setName] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [category, setCategory] = React.useState('');
+  const [category, setCategory] = React.useState('groceries');
   const [image, setImage] = React.useState('');
+  const [Quantity, setQuantity] = React.useState('');
   function handleSubmit(){
       let unique_id = ""
       for (let i = 0; i < 128; i++) {
         unique_id += String(Math.floor(Math.random() * 10));
       }
-      axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image} ).then(function(response){console.log("Successfully added product")}).catch(function(error){"There is a error in adding a product"});
-
-      axios.get('/api/users/getUserId').then(function(response){
-        console.log(response.data)
-        
-      }).catch(function(error){console.log("There is a error in getting user")});
+      axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(function(response){NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);}).catch(function(error){NotificationManager.error('Product Upload Failed', 'Error', 3000)});
+      
+      // axios.get('/api/users/getUserId').then(function(response){
+      //   NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);
+      // }).catch(function(error){NotificationManager.error('Product Upload Failed', 'Error', 3000);});
       
   }
   function handleName(e){
@@ -47,6 +48,9 @@ function ProductUploadForm() {
   }
   function handleImage(e){
     setImage(e.target.value);
+  }
+  function handleQuantity(e){
+    setQuantity(e.target.value);
   }
   return (
     <MDBContainer fluid>
@@ -99,6 +103,19 @@ function ProductUploadForm() {
               </MDBRow>
 
               <hr className="mx-n3" />
+                <MDBRow className='align-items-center pt-4 pb-3'>
+
+                    <MDBCol md='3' className='ps-5'>
+                      <h6 className="mb-0">Quantity</h6>
+                    </MDBCol>
+
+                    <MDBCol md='9' className='pe-5'>
+                      <MDBInput label='available items in stock' size='lg' id='form2' onChange={handleQuantity}/>
+                    </MDBCol>
+
+                    </MDBRow>
+
+              <hr className="mx-n3" />
 
               <MDBRow className='align-items-center pt-4 pb-3'>
 
@@ -134,14 +151,14 @@ function ProductUploadForm() {
 
               <hr className="mx-n3" />
 
-              <MDBBtn className='my-4' size='lg' onClick={handleSubmit}>Submit</MDBBtn>
-
+              {/* <MDBBtn className='my-4' size='lg' onClick={handleSubmit}>Submit</MDBBtn> */}
+              <button className='btn btn-primary' onClick={handleSubmit}>Submit</button>
             </MDBCardBody>
           </MDBCard>
 
         </MDBCol>
       </MDBRow>
-
+      <NotificationContainer/>
     </MDBContainer>
   );
 }
