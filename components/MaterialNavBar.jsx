@@ -71,18 +71,24 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const router = useRouter();
+  const [saved,setSaved] = React.useState(false);
   useEffect(()=>{ 
     if(localStorage.getItem('isBuyer') !== null){
         setIsBuyer(JSON.parse(localStorage.getItem('isBuyer')))
     }
-    // while(isLoading){
-    //   console.log("loading");
-    // }
-    if(user){
-      console.log("use effect is working");
-      axios.post('/api/users/uploadUser',{user:user});
-    }
   },[isBuyer])
+  if(!isLoading && user && !saved){
+    let userTemp = {};
+    if(isBuyer){
+      userTemp = {...user,isBuyer:true,isSeller:false}
+    }
+    else{
+      userTemp = {...user,isBuyer:false,isSeller:true}
+    }
+    axios.post('/api/users/uploadUser',userTemp).then((res)=>{}).catch((err)=>{console.log(err)});
+    localStorage.setItem('userid',user.sub);
+    setSaved(true);
+  }
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -109,9 +115,10 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  const handleBuyer = () => {
+  const handleBuyer = async () => {
     localStorage.setItem('isBuyer',true)
     setIsBuyer(true);
+    
     setAnchorEl(null);
     handleMobileMenuClose();
   }
@@ -121,10 +128,9 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   }
-  const  displayUserDetails = async () => {
-    // const auth0user = await auth0Client.getUser();
-    console.log(user);
+  const  displayUserDetails = () => {
     if(user){
+
       let userTemp={};
       if(isBuyer){
         userTemp = {...user,isBuyer:true,isSeller:false}

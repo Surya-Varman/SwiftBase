@@ -27,7 +27,26 @@ function ProductUploadForm() {
       for (let i = 0; i < 128; i++) {
         unique_id += String(Math.floor(Math.random() * 10));
       }
-      axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(function(response){NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);}).catch(function(error){NotificationManager.error('Product Upload Failed', 'Error', 3000)});
+      const userid = (localStorage.getItem('userid'));
+      axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(
+        function(response)
+          { 
+            axios.post('/api/seller/addProductSeller',{userid: userid,productId:unique_id,quantity: Quantity}).then(
+          () => {
+            NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);
+          } ).catch(
+            (err) => {
+              NotificationManager.error('Product Upload Failed 1', 'Error', 3000)
+        })}).catch(
+              function(error){
+                NotificationManager.error('Product Upload Failed 2', 'Error', 3000)
+        });
+      // axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(
+      //   function(response){
+      //     NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);
+      //   }).catch(
+      //     function(error){NotificationManager.error('Product Upload Failed', 'Error', 3000)
+      //   });
       
       // axios.get('/api/users/getUserId').then(function(response){
       //   NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);

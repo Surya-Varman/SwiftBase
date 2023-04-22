@@ -18,6 +18,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Rating from '@mui/material/Rating';
 import appleWatch from '../public/appleWatch.png'
 import Image from 'next/image'
+import axios from '../node_modules/axios';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -35,7 +36,10 @@ export default function RecipeReviewCard(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
+  const handleAddCart = () => {
+    const userid = localStorage.getItem('userid');
+    axios.post("/api/Cart/addToCart",{userid: userid,productId: props.productId,quantity: 1}).then(()=>{ console.log("no error in adding to cart")}).catch((err)=>{console.log("error in adding to cart",err)});
+  }
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader/>
@@ -50,9 +54,11 @@ export default function RecipeReviewCard(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
+      <div onClick={handleAddCart}>
         <IconButton aria-label="add to favorites">
           <ShoppingCartIcon/>
         </IconButton>
+      </div>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>

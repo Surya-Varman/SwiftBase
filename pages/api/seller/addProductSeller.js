@@ -1,11 +1,17 @@
-import {useUser} from '@auth0/nextjs-auth0/client'
 import mongoose from "mongoose";
-import dbConnect from "../../../utils/dbConnect";
+import dbConnect from '../../../utils/connectMongo';
 import User from "../../../models/user";
+import SellerDetails from '@/models/SellerDetails';
 export default async function Handler(req,res) {
     await dbConnect();
-    const [user, error, isLoading] = useUser();
-    const person = await User.findOne({userid:user.sub});
-    person.sellerProducts.push(req.body.productId);
-    person.save();
+    const object = new SellerDetails({
+        userid: req.body.userid,
+        productId: req.body.productId,
+        quantity: req.body.quantity,
+    });
+    object.save();
+    res.send("saved successfully");
+    // const person = await User.findOne({userid:user.sub});
+    // person.sellerProducts.push(req.body.productId);
+    // person.save();
 }
