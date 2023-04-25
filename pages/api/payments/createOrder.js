@@ -5,8 +5,9 @@ export default async function handler(req,res){
             userid: req.body.userid,
             productId: req.body.cart[i].productId,
             quantity: req.body.cart[i].quantity,
-            status: "Completed",
+            status: "Verification Pending",
             accountNumber: req.body.accountNumber,
+            warehouse: req.body.warehouse
         }) 
         await order.save();
     }

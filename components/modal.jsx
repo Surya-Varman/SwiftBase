@@ -14,8 +14,9 @@ const modal = (props) => {
     async function handleCheckout(){
         try{
             let accountNumberCurrent = accountNumber;
+            let warehouse = String(Math.floor(Math.random() * 10));
             const res = await axios.post('/api/payments', {userid: localStorage.getItem('userid'),accountNumber: accountNumber, discountCoupon: discountCoupon, totalCost: totalCost,swiftBuyCut: totalCost* 0.1, data: props.data});
-            const orderSave = await axios.post('/api/payments/createOrder',{userid: localStorage.getItem('userid'),accountNumber: accountNumberCurrent,cart: props.data});
+            const orderSave = await axios.post('/api/payments/createOrder',{userid: localStorage.getItem('userid'),accountNumber: accountNumberCurrent,cart: props.data,warehouse: warehouse});
             router.push('/redirects/paymentSuccess')
         }
         catch(err){

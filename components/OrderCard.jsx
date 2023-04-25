@@ -16,6 +16,14 @@ const orderCard = (props) => {
             alert("OTP not verified");
         }
     }
+    async function handleUpdateWarehouse(){
+        const newWarehouse = prompt("Enter new warehouse");
+        await axios.post('/api/orders/updateWarehouse',{userid: props.userid,productId: props.productId,quantity: props.quantity,status: props.status,accountNumber: props.accountNumber,warehouse: newWarehouse,oldWarehouse: props.warehouse})
+    }
+    function handleUpdateStatus(){
+        const newStatus = prompt("Enter new status");
+        axios.post('/api/orders/updateStatus',{userid: props.userid,productId: props.productId,quantity: props.quantity,status: newStatus,accountNumber: props.accountNumber,warehouse: props.warehouse})
+    }
   return (
     <>
                 <div className = 'card card-body'>
@@ -45,8 +53,10 @@ const orderCard = (props) => {
                         </div>
                         
                         <div className='row'>
-                            <div className='text-center'>
-                                <button className='btn btn-success' onClick={handleOTP}>GET OTP</button>
+                            <div className='text-center '>
+                                <button className='btn btn-success m-2' onClick={handleOTP}>GET OTP</button>
+                                <button className='btn btn-danger m-2' onClick={handleUpdateWarehouse}>UPDATE WAREHOUSE</button>
+                                <button className='btn btn-warning m-2' onClick={handleUpdateStatus}>UPDATE STATUS</button>
                             </div>        
                         </div>
                     </div>

@@ -14,7 +14,7 @@ const index = () => {
     <>
         {data.map(function(item){
           return <>
-            <OrderCard userid={item.userid} productId={item.productId} quantity={item.quantity} status={item.status} accountNumber={item.accountNumber} warehouse={4} email='cs20b056@iittp.ac.in'/>
+            <OrderCard userid={item.userid} productId={item.productId} quantity={item.quantity} status={item.status} accountNumber={item.accountNumber} warehouse={item.warehouse} email='cs20b056@iittp.ac.in'/>
           </>
         })}
     </>
