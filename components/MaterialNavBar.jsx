@@ -128,6 +128,12 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   }
+  const handleAdmin = ()=> {
+
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    router.push('/admin');
+  }
   const  displayUserDetails = () => {
     if(user){
 
@@ -138,7 +144,7 @@ export default function PrimarySearchAppBar() {
       else{
         userTemp = {...user,isBuyer:false,isSeller:true}
       }
-      axios.post("/api/users/uploadUser",userTemp).then(console.log("successfully added user")).catch(err=>console.log(err))
+      // axios.post("/api/users/uploadUser",userTemp).then(console.log("successfully added user")).catch(err=>console.log(err))
     }
   }
   const menuId = 'primary-search-account-menu';
@@ -165,6 +171,7 @@ export default function PrimarySearchAppBar() {
       <Link href="/api/auth/login"><MenuItem onClick={handleSeller}>Seller Login</MenuItem></Link>
     </div>
     }
+      {<MenuItem onClick={handleAdmin}>Handle Admin</MenuItem>}
       <MenuItem onClick={handleAccount}>My account</MenuItem>
     </Menu>
   );

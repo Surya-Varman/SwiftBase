@@ -4,6 +4,7 @@ const OrderSchema = new mongoose.Schema({
     productId: {type:String,required:true},
     quantity: {type:Number,required:true},
     status: {type:String,required:true},
-    AccountName: {type:String,required:true},
-    Date: {type: Date, default: Date.now},
+    accountNumber: {type:String,required:true},
+    date: {type: Date, default: Date.now},
 })
+export default mongoose.models.Order || mongoose.model('Order', OrderSchema)

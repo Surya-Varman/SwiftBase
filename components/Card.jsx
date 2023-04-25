@@ -19,6 +19,7 @@ import Rating from '@mui/material/Rating';
 import appleWatch from '../public/appleWatch.png'
 import Image from 'next/image'
 import axios from '../node_modules/axios';
+import {NotificationContainer,NotificationManager} from 'react-notifications';
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -38,7 +39,7 @@ export default function RecipeReviewCard(props) {
   };
   const handleAddCart = () => {
     const userid = localStorage.getItem('userid');
-    axios.post("/api/Cart/addToCart",{userid: userid,productId: props.productId,quantity: 1}).then(()=>{ console.log("no error in adding to cart")}).catch((err)=>{console.log("error in adding to cart",err)});
+    axios.post("/api/Cart/addToCart",{userid: userid,productId: props.productId,quantity: 1}).then(()=>{ NotificationManager.success('Product added to cart successfully')}).catch((err)=>{NotificationManager.error('Product not added to cart')});
   }
   return (
     <Card sx={{ maxWidth: 345 }}>

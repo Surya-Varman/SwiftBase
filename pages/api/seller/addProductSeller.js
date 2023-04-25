@@ -8,6 +8,7 @@ export default async function Handler(req,res) {
         userid: req.body.userid,
         productId: req.body.productId,
         quantity: req.body.quantity,
+        accountNumber: req.body.accountNumber,
     });
     object.save();
     res.send("saved successfully");

@@ -22,6 +22,9 @@ function ProductUploadForm() {
   const [category, setCategory] = React.useState('groceries');
   const [image, setImage] = React.useState('');
   const [Quantity, setQuantity] = React.useState('');
+  const [accountName, setAccountName] = React.useState('');
+  const [accountNumber, setAccountNumber] = React.useState('');
+  const [cardNumber, setCardNumber] = React.useState('');
   function handleSubmit(){
       let unique_id = ""
       for (let i = 0; i < 128; i++) {
@@ -31,7 +34,7 @@ function ProductUploadForm() {
       axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(
         function(response)
           { 
-            axios.post('/api/seller/addProductSeller',{userid: userid,productId:unique_id,quantity: Quantity}).then(
+            axios.post('/api/seller/addProductSeller',{userid: userid,productId:unique_id,quantity: Quantity,accountNumber: accountNumber}).then(
           () => {
             NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);
           } ).catch(
@@ -41,6 +44,12 @@ function ProductUploadForm() {
               function(error){
                 NotificationManager.error('Product Upload Failed 2', 'Error', 3000)
         });
+
+        axios.post('/api/accounts/addAccount', {userid: userid,accountNumber: accountNumber,accountName: accountName,cardNumber: cardNumber});
+
+
+
+
       // axios.post('/api/products/addProduct', { unique_id,name,price,description,category,image,Quantity} ).then(
       //   function(response){
       //     NotificationManager.success('Product Uploaded Successfully', 'Success', 3000);
@@ -70,6 +79,15 @@ function ProductUploadForm() {
   }
   function handleQuantity(e){
     setQuantity(e.target.value);
+  }
+  function handleAccountName(e){
+    setAccountName(e.target.value);
+  }
+  function handleAccountNumber(e){
+    setAccountNumber(e.target.value);
+  }
+  function handleCardNumber(e){
+    setCardNumber(e.target.value);
   }
   return (
     <MDBContainer fluid>
@@ -169,7 +187,39 @@ function ProductUploadForm() {
               </MDBRow>
 
               <hr className="mx-n3" />
+              <MDBRow className='align-items-center pt-4 pb-3'>
 
+                  <MDBCol md='3' className='ps-5'>
+                      <h6 className="mb-0">Account Name</h6>
+                  </MDBCol>
+
+                  <MDBCol md='9' className='pe-5'>
+                      <MDBInput  size='lg' id='form1' type='text' onChange={handleAccountName}/>
+                  </MDBCol>
+              </MDBRow>
+              <hr className="mx-n3" />
+              <MDBRow className='align-items-center pt-4 pb-3'>
+
+                  <MDBCol md='3' className='ps-5'>
+                      <h6 className="mb-0">Account Number</h6>
+                  </MDBCol>
+
+                  <MDBCol md='9' className='pe-5'>
+                      <MDBInput  size='lg' id='form1' type='text' onChange={handleAccountNumber}/>
+                  </MDBCol>
+              </MDBRow>
+              <hr className="mx-n3" />
+              <MDBRow className='align-items-center pt-4 pb-3'>
+
+                  <MDBCol md='3' className='ps-5'>
+                      <h6 className="mb-0">Card Number</h6>
+                  </MDBCol>
+
+                  <MDBCol md='9' className='pe-5'>
+                      <MDBInput  size='lg' id='form1' type='text' onChange={handleCardNumber}/>
+                  </MDBCol>
+              </MDBRow>
+              <hr className="mx-n3" />
               {/* <MDBBtn className='my-4' size='lg' onClick={handleSubmit}>Submit</MDBBtn> */}
               <button className='btn btn-primary' onClick={handleSubmit}>Submit</button>
             </MDBCardBody>

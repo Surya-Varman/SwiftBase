@@ -7,6 +7,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import {Product, HeroBanner, Footer, Navbar, FooterBanner,Cart,Layout,Card} from '../components'
 import HomeProducts from '../components/HomeProducts'
+import 'react-notifications/lib/notifications.css';
 export default function Home() {
   return (
     <>

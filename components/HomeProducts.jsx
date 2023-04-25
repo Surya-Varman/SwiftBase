@@ -9,6 +9,7 @@ const fetcher = async() =>{
   const data = await response.json();
   return data;
 }
+import {NotificationContainer,NotificationManager} from 'react-notifications';
 const HomeProducts = () => {
   const {data,error} = useSWR('homepage',fetcher);
   if(error) return <div>failed to load</div>
@@ -46,7 +47,7 @@ const HomeProducts = () => {
         </div>
       </div>
     
-    
+          <NotificationContainer/>
     </div>
   )
 }
